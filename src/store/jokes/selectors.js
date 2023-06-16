@@ -1,0 +1,1 @@
+export const selectJokes = (state)=> state.jokes;
