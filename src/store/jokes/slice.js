@@ -14,6 +14,8 @@ const jokesSlice = createSlice({
     categories: [],
     trivia: [],
     triviaCategories: [],
+    searchTrivia: "",
+    offsetTrivia: 0
   },
   reducers: {
     setRandomJoke: (state, action) => {
@@ -27,6 +29,15 @@ const jokesSlice = createSlice({
     },
     setTriviaCategories: (state, action) => {
       state.triviaCategories = action.payload;
+    },
+    setSearchTrivia: (state,action)=>{
+      state.searchTrivia = action.payload;
+    },
+    setOffsetTrivia : (state, action) =>{
+  
+        state.offsetTrivia += action.payload;
+    
+      
     },
     ...middlewareActions,
   },
@@ -43,6 +54,8 @@ export const {
   performGetRandomTrivia,
   performGetTriviaWithCategory,
   setRandomTrivia,
+  setSearchTrivia,
+  setOffsetTrivia
 } = jokesSlice.actions;
 
 export default jokesSlice.reducer;

@@ -3,73 +3,77 @@ import {
   performGetRandomTrivia,
   performGetTriviaCategory,
   performGetTriviaWithCategory,
+  setOffsetTrivia
 } from "../store/jokes/slice";
 import { useEffect, useState } from "react";
 import Select from "react-select";
-import { selectTrivia, selectTriviaCategories } from "../store/jokes/selectors";
+import { selectTrivia, selectTriviaCategories, selectOffset } from "../store/jokes/selectors";
 import AnswerModal from "./AnswerModal";
+import SingleQuestion from "./SingleQuestion";
 
 const TriviaQuestions = () => {
   const dispatch = useDispatch();
   const [showAnswer, setShowAnswer] = useState(false);
   const trivia = useSelector(selectTrivia);
+
+  const [offset, setOffset] = useState(0);
   const categories = useSelector(selectTriviaCategories);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const options = categories.map((category, index) => {
     return { value: category.id, label: category.title, key: index };
   });
-  console.log(showAnswer);
+  //console.log(showAnswer);
   useEffect(() => {
-    dispatch(performGetRandomTrivia());
+    dispatch(performGetRandomTrivia({offset: 0, value: ''}));
     dispatch(performGetTriviaCategory());
-  }, [dispatch]);
+  }, []);
 
   const handleCategoryChange = (selectedOption) => {
     setSelectedCategory(selectedOption.value);
   };
+  const pageChangeHandler = (payload) => {
+    dispatch(setOffsetTrivia(payload));
+    dispatch(performGetRandomTrivia(payload));
+  }
+  const setOffsetHandler = (payload) => {
+    setOffset((prev) => {
+      if (prev < 0) {
+        return 0;
+      } else {
+        return prev + payload
+      }
+
+    })
+  }
 
   return (
-    <div className="col-md-5">
-      <div className="h-100 p-5 bg-body-tertiary border rounded-3">
-        <h2 className="d-flex justify-content-center">Trivia Questions</h2>
-        <p>{trivia[0]?.question}</p>
-        <Select
-          options={options}
-          defaultValue={selectedCategory}
-          onChange={handleCategoryChange}
-        ></Select>
-        <div className="d-flex justify-content-center pt-3">
-          <button
-            className="btn btn-outline-secondary "
-            type="button"
-            onClick={() => {
-              if (selectedCategory) {
-                dispatch(performGetTriviaWithCategory(selectedCategory));
-              } else {
-                dispatch(performGetRandomTrivia());
-              }
-            }}
-          >
-            Get New Question
-          </button>
-          <button
-            className="btn btn-outline-secondary "
-            type="button"
-            onClick={() => setShowAnswer(true)}
-          >
-            Show Answer
-          </button>
-        </div>
-      </div>
-      <div>
-        {showAnswer && (
-          <AnswerModal
-            trivia={trivia}
-            setShowAnswer={setShowAnswer}
-          ></AnswerModal>
-        )}
-      </div>
+    <div>
+      <Select
+        options={options}
+        defaultValue={selectedCategory}
+        onChange={handleCategoryChange}
+      ></Select>
+      <button
+        className="btn btn-outline-secondary pr-3 "
+        type="button"
+        onClick={() => {
+          if (selectedCategory) {
+            dispatch(performGetTriviaWithCategory(selectedCategory));
+          } else {
+            dispatch(performGetRandomTrivia());
+          }
+        }}
+      >
+        Get New Questions
+      </button>
+      <button disabled={offset === 0} className="btn btn-outline-secondary pr-3" onClick={() => { setOffsetHandler(10); pageChangeHandler(offset) }}>Next page</button>
+      <button disabled={trivia.length <= 10} className="btn btn-outline-secondary pr-3" onClick={() => { setOffsetHandler(-10); pageChangeHandler(offset) }}>Previous page</button>
+      {trivia.map((trivia) => {
+        return <SingleQuestion trivia={trivia} setShowAnswer={setShowAnswer} showAnswer={showAnswer}></SingleQuestion>
+      })}
     </div>
+
+
   );
 };
 

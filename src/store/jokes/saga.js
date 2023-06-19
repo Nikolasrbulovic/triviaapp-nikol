@@ -16,7 +16,7 @@ import { setRandomJoke } from "./slice";
 function* jokesHandler(category) {
   try {
     const { data } = yield call(ChuckService.getRandomJoke, category.payload);
-
+    
     yield put(setRandomJoke(data));
   } catch (error) {
     console.log(error);
@@ -31,11 +31,16 @@ function* getCategoryHandler() {
     console.log(error);
   }
 }
-function* getTriviaQuestionsHandler() {
+function* getTriviaQuestionsHandler({payload}) {
   try {
-    const { data } = yield call(TriviaService.getRandomTrivia);
-
-    yield put(setRandomTrivia(data));
+    const { data } = yield call(TriviaService.getRandomTrivia, payload);
+    let newData = [];
+    for(let i = 0; i<10; i++){
+      newData.push(data[i])
+    }
+   
+    
+    yield put(setRandomTrivia(newData));
   } catch (error) {
     console.log(error);
   }
@@ -46,8 +51,14 @@ function* getTriviaQuestionsHandlerCategory(category) {
       TriviaService.getTriviaWithCategory,
       category.payload
     );
+    console.log(data)
+    let newData = [];
+    for(let i = 0; i<10; i++){
+      newData.push(data.clues[i])
+    }
+    console.log(newData);
 
-    yield put(setRandomTrivia(data.clues));
+    yield put(setRandomTrivia(newData));
   } catch (error) {
     console.log(error);
   }

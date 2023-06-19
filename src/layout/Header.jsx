@@ -1,3 +1,5 @@
+import SearchTrivia from "../components/SearchTrivia";
+
 const Header = () => {
   return (
     <header class="p-3 text-bg-dark">
@@ -20,6 +22,7 @@ const Header = () => {
               </a>
             </li>
           </ul>
+         <SearchTrivia></SearchTrivia>
         </div>
       </div>
     </header>

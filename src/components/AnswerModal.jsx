@@ -18,7 +18,7 @@ const AnswerModal = ({ setShowAnswer, trivia }) => {
             ></button>
           </div>
           <div class="modal-body py-0">
-            <p>{trivia[0].answer}</p>
+            <p>{trivia.answer}</p>
           </div>
           <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
             <button

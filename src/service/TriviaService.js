@@ -1,8 +1,9 @@
 import { APItrivia } from "../shared/api";
 
 export const TriviaService = {
-  getRandomTrivia: async (count = 30) => {
-    const data = await APItrivia.get(`/api/random?count=${count}`);
+  getRandomTrivia: async ({offset, value}) => {
+    const data = await APItrivia.get(`api/clues?offset=${offset}&value=${value}`);
+    console.log(data);
     return data;
   },
   getTriviaCategories: async (count = 10) => {
