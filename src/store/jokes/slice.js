@@ -1,22 +1,48 @@
 import { createSlice } from "@reduxjs/toolkit";
 const middlewareActions = {
-    performGetRandomJoke: ()=>{}
-  };
+  performGetRandomJoke: () => {},
+  performGetRandomTrivia: () => {},
+  performGetTriviaCategory: () => {},
+  performGetTriviaWithCategory: () => {},
+  performGetCategory: () => {},
+};
 
-   const jokesSlice = createSlice({
-    name : 'jokes',
-    initialState:{
-        jokes :[]
+const jokesSlice = createSlice({
+  name: "jokes",
+  initialState: {
+    jokes: [],
+    categories: [],
+    trivia: [],
+    triviaCategories: [],
+  },
+  reducers: {
+    setRandomJoke: (state, action) => {
+      state.jokes = action.payload;
     },
-    reducers:{
-      setRandomJoke: (state, action) =>{
-          state.jokes = action.payload
-      },
-      ...middlewareActions
+    setCategories: (state, action) => {
+      state.categories = action.payload;
+    },
+    setRandomTrivia: (state, action) => {
+      state.trivia = action.payload;
+    },
+    setTriviaCategories: (state, action) => {
+      state.triviaCategories = action.payload;
+    },
+    ...middlewareActions,
+  },
+});
 
-    }
-  })
+export const {
+  setRandomJoke,
+  performGetTriviaCategory,
+  setTriviaCategories,
+  setCategories,
+  performGetCategory,
+  performGetRandomJoke,
+  performGetRandomJokeCategory,
+  performGetRandomTrivia,
+  performGetTriviaWithCategory,
+  setRandomTrivia,
+} = jokesSlice.actions;
 
-  export const {setRandomJoke,performGetRandomJoke}= jokesSlice.actions;
-
-  export default jokesSlice.reducer;
+export default jokesSlice.reducer;
